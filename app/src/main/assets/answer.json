@@ -1,0 +1,112 @@
+{
+  "Africa": {
+    "south_africa": {
+      "capital": "cape_town1",
+      "photo": "south-africa"
+    },
+    "sudan": {
+      "capital": "cape_town",
+      "photo": "sudan"
+    },
+    "tanzania": {
+      "capital": "cape_town",
+      "photo": "tanzania"
+    },
+    "togo": {
+      "capital": "cape_town",
+      "photo": "togo"
+    },
+    "zimbabwe": {
+      "capital": "cape_towneee",
+      "photo": "zimbabwe"
+    }
+  },
+  "Asia": {
+    "georgia":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "japan":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "pakistan":  {
+      "capital" : "cape_town",
+      "photo" : "pakistan"
+    },
+    "abkhazia":  {
+      "capital" : "cape_town",
+      "photo" : "abkhazia"
+    },
+    "afghanistan":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    }
+  },
+  "Europe": {
+    "andorra":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "moldova":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "denmark":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "portugal":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "ukraine":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    }
+  },
+  "North_America": {
+    "canada":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "guatemala":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "honduras":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "mexico":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "united-states-of-america":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    }
+  },
+  "South_America": {
+    "argentina":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "brazil":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "chile":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "peru":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    },
+    "uruguay":  {
+      "capital" : "cape_town",
+      "photo" : "south_africa"
+    }
+  }
+}
