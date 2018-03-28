@@ -1,12 +1,15 @@
 package flag.test.com.contryflag.model;
 
 public class Country {
+    private static final Country ourInstance = new Country();
+
     private String country;
     private String capital;
     private String region;
     private String photo;
 
     public Country() {
+
     }
 
     public Country(String region, String country, String capital, String photo) {
@@ -14,6 +17,10 @@ public class Country {
         this.capital = capital;
         this.region = region;
         this.photo = photo;
+    }
+
+    public static Country getInstance() {
+        return ourInstance;
     }
 
     public String getCountry() {

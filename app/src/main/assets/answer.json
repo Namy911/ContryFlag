@@ -1,112 +1,112 @@
 {
   "Africa": {
     "south_africa": {
-      "capital": "cape_town1",
-      "photo": "south-africa"
+      "capital": "cape town",
+      "photo": "south-africa.png"
     },
     "sudan": {
-      "capital": "cape_town",
-      "photo": "sudan"
+      "capital": "Africa2",
+      "photo": "sudan.png"
     },
     "tanzania": {
-      "capital": "cape_town",
-      "photo": "tanzania"
+      "capital": "Africa3",
+      "photo": "tanzania.png"
     },
     "togo": {
-      "capital": "cape_town",
-      "photo": "togo"
+      "capital": "africa4",
+      "photo": "togo.png"
     },
     "zimbabwe": {
-      "capital": "cape_towneee",
-      "photo": "zimbabwe"
+      "capital": "Africa5",
+      "photo": "zimbabwe.png"
     }
   },
   "Asia": {
     "georgia":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Asia",
+      "photo" : "georgia.png"
     },
     "japan":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Asia2",
+      "photo" : "japan.png"
     },
     "pakistan":  {
-      "capital" : "cape_town",
-      "photo" : "pakistan"
+      "capital" : "Asia3",
+      "photo" : "pakistan.png"
     },
     "abkhazia":  {
-      "capital" : "cape_town",
-      "photo" : "abkhazia"
+      "capital" : "Asia4",
+      "photo" : "abkhazia.png"
     },
     "afghanistan":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Asia5",
+      "photo" : "afghanistan.png"
     }
   },
   "Europe": {
     "andorra":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Europe",
+      "photo" : "andorra.png"
     },
     "moldova":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Europe2",
+      "photo" : "moldova.png"
     },
     "denmark":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Europe3",
+      "photo" : "denmark.png"
     },
     "portugal":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Europe4",
+      "photo" : "portugal.png"
     },
     "ukraine":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "Europe5",
+      "photo" : "ukraine.png"
     }
   },
   "North_America": {
     "canada":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "North_America5",
+      "photo" : "canada.png"
     },
     "guatemala":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "North_America",
+      "photo" : "guatemala.png"
     },
     "honduras":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "North_America2",
+      "photo" : "honduras.png"
     },
     "mexico":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "North_America3",
+      "photo" : "mexico.png"
     },
-    "united-states-of-america":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+    "u.s.a.":  {
+      "capital" : "North_America4",
+      "photo" : "united-states-of-america.png"
     }
   },
   "South_America": {
     "argentina":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "South_America",
+      "photo" : "argentina.png"
     },
     "brazil":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "South_America1",
+      "photo" : "brazil.png"
     },
     "chile":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "South_America2",
+      "photo" : "chile.png"
     },
     "peru":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "South_America3",
+      "photo" : "peru.png"
     },
     "uruguay":  {
-      "capital" : "cape_town",
-      "photo" : "south_africa"
+      "capital" : "South_America4",
+      "photo" : "uruguay.png"
     }
   }
 }
