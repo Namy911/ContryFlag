@@ -42,15 +42,9 @@ public class MainActivityFragment extends Fragment {
     private Button answer4;
     private Bitmap bitmapFlag;
 
-    private List<String> randRegionsIndex;
-    private List<Country> listAnswers;
     private List<Country> countryList;
+    private List<Country> tempLite = new ArrayList<>();
     private String region;
-    private int index;
-    //private int[] indexAnswers ;
-    private List<String> listRandRegions;
-    private Map<Integer, String> regions;
-
 
     private static final String TAG = "MainActivityFragment";
 
@@ -73,7 +67,6 @@ public class MainActivityFragment extends Fragment {
         answer4 = view.findViewById(R.id.answer4);
 
         init();
-        //setRandAnswers();
         countryFlagImg.setImageBitmap(bitmapFlag);
         txtRegion.setText(region);
 
@@ -85,7 +78,6 @@ public class MainActivityFragment extends Fragment {
                 countryFlagImg.setImageBitmap(bitmapFlag);
             }
         });
-
         return view;
     }
 
@@ -94,15 +86,15 @@ public class MainActivityFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void init(){
+    private void init() {
         List<Country> listAnswer = setRandAnswers();
 
-        answer1.setText(listAnswer.get(0).getCountry());
-        answer2.setText(listAnswer.get(1).getCountry());
-        answer3.setText(listAnswer.get(2).getCountry());
-        answer4.setText(listAnswer.get(3).getCountry());
-        Log.d(TAG, "init: " + listAnswer.get(3).getCountry());
-
+        if (listAnswer.size() > 1) {
+            answer1.setText(listAnswer.get(0).getCountry());
+            answer2.setText(listAnswer.get(1).getCountry());
+            answer3.setText(listAnswer.get(2).getCountry());
+            answer4.setText(listAnswer.get(3).getCountry());
+            Log.d(TAG, "init: " + listAnswer.get(3).getCountry());
             try {
                 region = listAnswer.get(3).getRegion();
                 //Log.d(TAG, "init:  " + region + "/" + listAnswer.get(3).getPhoto());
@@ -121,6 +113,9 @@ public class MainActivityFragment extends Fragment {
                         e.printStackTrace();
                     }
             }
+        } else {
+            Log.d(TAG, "init:  Finish---------------------------------------");
+        }
     }
 
     private String loadJSONFromAsset() {
@@ -135,8 +130,8 @@ public class MainActivityFragment extends Fragment {
             json = new String(answerArray, "UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
-        }finally {
-            if( stream != null)
+        } finally {
+            if (stream != null)
                 try {
                     stream.close();
                 } catch (IOException e) {
@@ -153,20 +148,20 @@ public class MainActivityFragment extends Fragment {
             JSONObject objectAnswer = new JSONObject(loadJSONFromAsset());
             Iterator<String> firstNode = objectAnswer.keys();
 
-            while (firstNode.hasNext()){
+            while (firstNode.hasNext()) {
                 String firstNodeKeys = firstNode.next();
-                    JSONObject firstNodeValue = objectAnswer.getJSONObject(firstNodeKeys);
-                    Iterator<String> SecondNode = firstNodeValue.keys();
+                JSONObject firstNodeValue = objectAnswer.getJSONObject(firstNodeKeys);
+                Iterator<String> SecondNode = firstNodeValue.keys();
 
-                    while (SecondNode.hasNext()) {
-                        String SecondNodeKeys = SecondNode.next();
-                        JSONObject SecondNodeValue = firstNodeValue.getJSONObject(SecondNodeKeys);
-                        String capital = (String) SecondNodeValue.get(REGION_CAPITAL);
-                        String photo = (String) SecondNodeValue.get(REGION_PHOTO);
+                while (SecondNode.hasNext()) {
+                    String SecondNodeKeys = SecondNode.next();
+                    JSONObject SecondNodeValue = firstNodeValue.getJSONObject(SecondNodeKeys);
+                    String capital = (String) SecondNodeValue.get(REGION_CAPITAL);
+                    String photo = (String) SecondNodeValue.get(REGION_PHOTO);
 
-                        countryList.add(new Country(firstNodeKeys,SecondNodeKeys,capital,photo));
-                    }
+                    countryList.add(new Country(firstNodeKeys, SecondNodeKeys, capital, photo));
                 }
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -174,59 +169,99 @@ public class MainActivityFragment extends Fragment {
 
     private List<Country> setRandAnswers() {
         List<Country> tempList = new ArrayList<>();
-        List<Country> tempLite = new ArrayList<>();
         List<Country> tempAnswers = new ArrayList<>();
         List<Integer> index = new ArrayList<>();
         tempList.addAll(countryList);
-        tempLite.addAll(countryList);
-//        if (tempAnswers.size() > 1) {
-//            tempAnswers.clear();
-//            Log.d(TAG, "setRandAnswers: clear answers");
-//        }
+
         if (tempList.size() > 4) {
             for (int i = 0; i < 4; i++) {
                 index.add(new Random().nextInt(tempList.size()));
                 tempAnswers.add(tempList.get(index.get(i)));
-                tempList.remove(index.get(i));
-
+                tempList.remove(tempList.get(index.get(i)));
             }
-            removeCountry(tempList.get(index.get(3)));
-            Log.d(TAG, "setRandAnswers: tempList  " + tempList.size() + " / " + "setRandAnswers: countryList  " + countryList.size());
-            Log.d(TAG, "LIst Index " + index.get(0) + " / " + index.get(1) + " / " + index.get(2) + " / " + index.get(3));
+            tempList.add(tempAnswers.get(0));
+            tempList.add(tempAnswers.get(1));
+            tempList.add(tempAnswers.get(2));
+
+            Log.d(TAG, "setRandAnswers: DEl   " + tempAnswers.get((3)).getCountry());
+            removeCountry(tempAnswers.get((3)));
+
+            Log.d(TAG, "tempList  " + tempList.size() + " / " + "countryList  " + countryList.size());
+            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
+                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
             Log.d(TAG, "--------------------------------------------------------------------");
-        } else if (tempList.size() > 1) {
-            for (int i = 0; i < 4; i++) {
+        } else if (tempList.size() > 3) {
+            Log.d(TAG, "--------------------------- >3 -----------------------------------------" + tempList.get(2).getCountry());
+            for (int i = 0; i < 3; i++) {
                 index.add(new Random().nextInt(tempLite.size()));
                 tempAnswers.add(tempLite.get(index.get(i)));
-                tempLite.remove(index.get(i));
+                tempLite.remove(tempLite.get(index.get(i)));
             }
-            removeCountry(tempLite.get(index.get(3)));
-            index.add(new Random().nextInt(tempAnswers.size()));
-            Log.d(TAG, "setRandAnswers: tempList  " + tempList.size() + " / " + "setRandAnswers: countryList  " + countryList.size());
-            Log.d(TAG, "LIst Index " + index.get(0) + " / " + index.get(1) + " / " + index.get(2) + " / " + index.get(3));
+            tempLite.add(tempAnswers.get(0));
+            tempLite.add(tempAnswers.get(1));
+            tempLite.add(tempAnswers.get(2));
+
+            tempAnswers.add(tempList.get(2));
+            removeCountry(tempList.get(2));
+
+            Log.d(TAG, "setRandAnswers: DEl   " + tempAnswers.get((3)).getCountry());
+            Log.d(TAG, "tempLite  " + tempLite.size() + " / " + "countryList  " + countryList.size() + " / " + countryList.get(0).getCountry() + " / "
+                    + countryList.get(1).getCountry() + " / " + countryList.get(2).getCountry());
+            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
+                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
+            Log.d(TAG, "--------------------------------------------------------------------");
+        } else if (tempList.size() > 2) {
+            Log.d(TAG, "--------------------------- >2 -----------------------------------------");
+            for (int i = 0; i < 3; i++) {
+                index.add(new Random().nextInt(tempLite.size()));
+                tempAnswers.add(tempLite.get(index.get(i)));
+                tempLite.remove(tempLite.get(index.get(i)));
+            }
+            tempLite.add(tempAnswers.get(0));
+            tempLite.add(tempAnswers.get(1));
+            tempLite.add(tempAnswers.get(2));
+
+            tempAnswers.add(tempList.get(1));
+            removeCountry(tempList.get(1));
+
+            Log.d(TAG, "setRandAnswers: DEl   " + tempList.get((1)).getCountry());
+            Log.d(TAG, "countryList  " + countryList.size() + " / " + countryList.get(0).getCountry() + " / "
+                    + countryList.get(1).getCountry());
+            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
+                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
+            Log.d(TAG, "--------------------------------------------------------------------");
+        } else if (tempList.size() > 1) {
+            Log.d(TAG, "--------------------------- >1 -----------------------------------------");
+            for (int i = 0; i < 3; i++) {
+                index.add(new Random().nextInt(tempLite.size()));
+                tempAnswers.add(tempLite.get(index.get(i)));
+                tempLite.remove(tempLite.get(index.get(i)));
+            }
+            tempLite.add(tempAnswers.get(0));
+            tempLite.add(tempAnswers.get(1));
+            tempLite.add(tempAnswers.get(2));
+
+            tempAnswers.add(tempList.get(0));
+            removeCountry(tempList.get(0));
+
+            Log.d(TAG, "setRandAnswers: DEl   " + tempList.get((0)).getCountry());
+            Log.d(TAG, "countryList  " + countryList.size() + " / " + countryList.get(0).getCountry());
+            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
+                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
             Log.d(TAG, "--------------------------------------------------------------------");
         } else {
-            removeCountry(tempLite.get(0));
-            for (int i = 0; i < 3; i++) {
-                index.add(new Random().nextInt(countryList.size()));
-                tempAnswers.add(countryList.get(index.get(i)));
-                countryList.remove(index.get(i));
-            }
-            tempAnswers.add(tempLite.get(0));
-
             answer1.setEnabled(false);
-            Log.d(TAG, "setRandAnswers: tempList  " + tempList.size() + " / " + "setRandAnswers: countryList  " + countryList.size());
-            Log.d(TAG, "LIst Index " + index.get(0) + " / " + index.get(1) + " / " + index.get(2) + " / " + index.get(3));
-            Log.d(TAG, "--------------------------------------------------------------------");
+            Log.d(TAG, "--------------------------- Finis -----------------------------------------");
         }
         return tempAnswers;
     }
 
     private void removeCountry(Country country) {
+        Log.d(TAG, "removeCountry: --------------" + country.getCountry() + "------------  " + tempLite.size());
         if (countryList.size() > 1) {
             countryList.remove(country);
-            Log.d(TAG, "removeCountry: --------------" + country.getCountry());
-        }else {
+            tempLite.add(country);
+        } else {
             Log.d(TAG, "removeCountry: no deleted");
         }
     }
