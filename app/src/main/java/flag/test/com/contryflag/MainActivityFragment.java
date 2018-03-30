@@ -3,6 +3,7 @@ package flag.test.com.contryflag;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -22,7 +23,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import flag.test.com.contryflag.model.Country;
@@ -32,6 +32,7 @@ public class MainActivityFragment extends Fragment {
     private static final String JSON_ANSWER = "answer.json";
     private static final String REGION_CAPITAL = "capital";
     private static final String REGION_PHOTO = "photo";
+    private static final String ANSWER_1 = "answer1";
 
     private ImageView countryFlagImg;
     private InputStream stream;
@@ -44,14 +45,16 @@ public class MainActivityFragment extends Fragment {
 
     private List<Country> countryList;
     private List<Country> tempLite = new ArrayList<>();
+    private List<Country> listAnswer = new ArrayList<>();
     private String region;
 
+    List<Country> c = new ArrayList<>();
     private static final String TAG = "MainActivityFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getAnswers();
+        getAnswersJSON();
     }
 
     @Override
@@ -66,16 +69,12 @@ public class MainActivityFragment extends Fragment {
         answer3 = view.findViewById(R.id.answer3);
         answer4 = view.findViewById(R.id.answer4);
 
-        init();
-        countryFlagImg.setImageBitmap(bitmapFlag);
-        txtRegion.setText(region);
+        init(false);
 
         answer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                init();
-                txtRegion.setText(region);
-                countryFlagImg.setImageBitmap(bitmapFlag);
+                init(false);
             }
         });
         return view;
@@ -84,37 +83,18 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("listAnswer", (ArrayList<? extends Parcelable>) listAnswer);
     }
 
-    private void init() {
-        List<Country> listAnswer = setRandAnswers();
-
-        if (listAnswer.size() > 1) {
-            answer1.setText(listAnswer.get(0).getCountry());
-            answer2.setText(listAnswer.get(1).getCountry());
-            answer3.setText(listAnswer.get(2).getCountry());
-            answer4.setText(listAnswer.get(3).getCountry());
-            Log.d(TAG, "init: " + listAnswer.get(3).getCountry());
-            try {
-                region = listAnswer.get(3).getRegion();
-                //Log.d(TAG, "init:  " + region + "/" + listAnswer.get(3).getPhoto());
-                stream = getContext().getAssets()
-                        .open(region + "/" + listAnswer.get(3).getPhoto());
-                bitmapFlag = BitmapFactory.decodeStream(stream);
-
-                //removeCountry(indexAnswer);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (stream != null)
-                    try {
-                        stream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-            }
-        } else {
-            Log.d(TAG, "init:  Finish---------------------------------------");
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null){
+            //c.clear();
+            c = savedInstanceState.getParcelableArrayList("listAnswer");
+            Log.d(TAG, "onCreateView:       " + c.size() + "//" + c.get(0).getCountry() + "  "+ "//" + c.get(1).getCountry() + "  "
+                    + c.get(2).getCountry() + "  "+ "//" + c.get(3).getCountry());
+            init(true);
         }
     }
 
@@ -141,7 +121,7 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
-    private void getAnswers() {
+    private void getAnswersJSON() {
         countryList = new ArrayList<>();
         try {
             //Country item =  new Country().getInstance();
@@ -167,6 +147,42 @@ public class MainActivityFragment extends Fragment {
         }
     }
 
+    private void getRandAnswers(boolean save) {
+        if (save){
+            listAnswer = c;
+            Log.d(TAG, "getRandAnswers:  SAVE   "  + listAnswer.size() + "//" + listAnswer.get(0).getCountry() + "  "+ "//" + listAnswer.get(1).getCountry() + "  "
+                    + listAnswer.get(2).getCountry() + "  "+ "//" + listAnswer.get(3).getCountry());
+        }else {
+            listAnswer = setRandAnswers();
+            Log.d(TAG, "getRandAnswers: NO SAVE");
+        }
+        //listAnswer = setRandAnswers();
+        if (listAnswer.size() > 1) {
+            answer1.setText(listAnswer.get(0).getCountry());
+            answer2.setText(listAnswer.get(1).getCountry());
+            answer3.setText(listAnswer.get(2).getCountry());
+            answer4.setText(listAnswer.get(3).getCountry());
+            //Log.d(TAG, "getRandAnswers: " + listAnswer.get(3).getCountry());
+            try {
+                region = listAnswer.get(3).getRegion();
+                stream = getContext().getAssets()
+                        .open(region + "/" + listAnswer.get(3).getPhoto());
+                bitmapFlag = BitmapFactory.decodeStream(stream);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (stream != null)
+                    try {
+                        stream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+            }
+        } else {
+            //Log.d(TAG, "getRandAnswers:  Finish---------------------------------------");
+        }
+    }
+
     private List<Country> setRandAnswers() {
         List<Country> tempList = new ArrayList<>();
         List<Country> tempAnswers = new ArrayList<>();
@@ -183,13 +199,13 @@ public class MainActivityFragment extends Fragment {
             tempList.add(tempAnswers.get(1));
             tempList.add(tempAnswers.get(2));
 
-            Log.d(TAG, "setRandAnswers: DEl   " + tempAnswers.get((3)).getCountry());
-            removeCountry(tempAnswers.get((3)));
-
-            Log.d(TAG, "tempList  " + tempList.size() + " / " + "countryList  " + countryList.size());
-            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
-                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
-            Log.d(TAG, "--------------------------------------------------------------------");
+//            Log.d(TAG, "setRandAnswers: DEl   " + tempAnswers.get((3)).getCountry());
+//            removeCountry(tempAnswers.get((3)));
+//
+//            Log.d(TAG, "tempList  " + tempList.size() + " / " + "countryList  " + countryList.size());
+//            Log.d(TAG, "LIst Index " + tempAnswers.get(0).getCountry() + " / " + tempAnswers.get(1).getCountry()
+//                    + " / " + tempAnswers.get(2).getCountry() + " / " + tempAnswers.get(3).getCountry());
+//            Log.d(TAG, "--------------------------------------------------------------------");
         } else if (tempList.size() > 3) {
             Log.d(TAG, "--------------------------- >3 -----------------------------------------" + tempList.get(2).getCountry());
             for (int i = 0; i < 3; i++) {
@@ -257,13 +273,18 @@ public class MainActivityFragment extends Fragment {
     }
 
     private void removeCountry(Country country) {
-        Log.d(TAG, "removeCountry: --------------" + country.getCountry() + "------------  " + tempLite.size());
+        //Log.d(TAG, "removeCountry: --------------" + country.getCountry() + "------------  " + tempLite.size());
         if (countryList.size() > 1) {
             countryList.remove(country);
             tempLite.add(country);
         } else {
-            Log.d(TAG, "removeCountry: no deleted");
+            //Log.d(TAG, "removeCountry: no deleted");
         }
     }
 
+    private void init(boolean save){
+        getRandAnswers(save);
+        txtRegion.setText(region);
+        countryFlagImg.setImageBitmap(bitmapFlag);
+    }
 }
