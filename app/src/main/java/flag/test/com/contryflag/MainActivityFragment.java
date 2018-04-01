@@ -38,7 +38,7 @@ public class MainActivityFragment extends Fragment {
     private ImageView countryFlagImg;
     private InputStream stream;
     private TextView txtRegion;
-    private Button answer1;
+    private List<Button> answers = new ArrayList<Button>();;
     private Button answer2;
     private Button answer3;
     private Button answer4;
@@ -66,14 +66,18 @@ public class MainActivityFragment extends Fragment {
 
         countryFlagImg = view.findViewById(R.id.contry_flag);
         txtRegion = view.findViewById(R.id.txt_region);
-        answer1 = view.findViewById(R.id.answer1);
-        answer2 = view.findViewById(R.id.answer2);
-        answer3 = view.findViewById(R.id.answer3);
-        answer4 = view.findViewById(R.id.answer4);
+        Button button1 = view.findViewById(R.id.answer1);
+        Button button2 = view.findViewById(R.id.answer2);
+        Button button3 = view.findViewById(R.id.answer3);
+        Button button4 = view.findViewById(R.id.answer4);
+        answers.add(button1);
+        answers.add(button2);
+        answers.add(button3);
+        answers.add(button4);
 
         init(false);
 
-        answer1.setOnClickListener(new View.OnClickListener() {
+        answers.get(0).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 init(false);
@@ -153,15 +157,22 @@ public class MainActivityFragment extends Fragment {
         }
 
         if (listAnswer.size() > 1) {
-            answer1.setText(listAnswer.get(0).getCountry());
-            answer2.setText(listAnswer.get(1).getCountry());
-            answer3.setText(listAnswer.get(2).getCountry());
-            answer4.setText(listAnswer.get(3).getCountry());
+
+            Country answer = listAnswer.get(new Random().nextInt(listAnswer.size()));
+            Log.d(TAG, "setRandAnswers: id answer   " + answer.getCountry());
+
+            for (int i = 0; i < answers.size(); i++) {
+                answers.get(i).setText(listAnswer.get(i).getCountry());
+            }
+//            answers.get().setText(listAnswer.get(0).getCountry());
+//            answer2.setText(listAnswer.get(1).getCountry());
+//            answer3.setText(listAnswer.get(2).getCountry());
+//            answer4.setText(listAnswer.get(3).getCountry());
             //Log.d(TAG, "getRandAnswers: " + listAnswer.get(3).getCountry());
             try {
-                region = listAnswer.get(3).getRegion();
+                region = answer.getRegion();
                 stream = getContext().getAssets()
-                        .open(region + "/" + listAnswer.get(3).getPhoto());
+                        .open(region + "/" + answer.getPhoto());
                 bitmapFlag = BitmapFactory.decodeStream(stream);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -194,14 +205,13 @@ public class MainActivityFragment extends Fragment {
         } else if (tempList.size() > 1) {
             tempAnswers = setRandAnswers(tempLite, 1);
         } else {
-            answer1.setEnabled(false);
+            answers.get(0).setEnabled(false);
             Log.d(TAG, "--------------------------- Finis -----------------------------------------");
         }
         return tempAnswers;
     }
 
     private List<Country> setRandAnswers(List<Country> list, int length) {
-        Log.d(TAG, "setRandAnswers: ***************************************   " + tempList.size());
         List<Integer> index = new ArrayList<>();
         List<Country> answers = new ArrayList<>();
 
@@ -210,6 +220,7 @@ public class MainActivityFragment extends Fragment {
             answers.add(list.get(index.get(i)));
             list.remove(list.get(index.get(i)));
         }
+
         for (int i = 0; i < 3; i++) {
             list.add(answers.get(i));
         }
@@ -220,22 +231,17 @@ public class MainActivityFragment extends Fragment {
                 break;
             case 3:
                 answers = setAnswerHelper(answers, 2);
-                Log.d(TAG, "setRandAnswers: lite size  " + tempLite.size());
-                Log.d(TAG, "setRandAnswers:  3  " + tempList.get(length - 1).getCountry());
                 break;
             case 2:
                 answers = setAnswerHelper(answers, 1);
-                Log.d(TAG, "setRandAnswers: lite size  " + tempLite.size());
-                Log.d(TAG, "setRandAnswers:  2  " + tempList.get(length - 1).getCountry());
                 break;
             case 1:
                 answers = setAnswerHelper(answers, 0);
-                Log.d(TAG, "setRandAnswers: lite size  " + tempLite.size());
-                Log.d(TAG, "setRandAnswers:  1  " + tempList.get(length - 1).getCountry());
                 break;
         }
         return answers;
     }
+
     private List<Country> setAnswerHelper(List<Country> answers, int index){
         answers.add(tempList.get(index));
         removeCountry(tempList.get(index));
