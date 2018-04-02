@@ -1,0 +1,49 @@
+{
+  "Africa": {
+    "south africa": {
+      "capital": "cape town",
+      "photo": "south-africa.png"
+    },
+    "sudan": {
+      "capital": "Africa2",
+      "photo": "sudan.png"
+    }
+  },
+  "Asia": {
+    "georgia":  {
+      "capital" : "Asia",
+      "photo" : "georgia.png"
+    }
+  },
+  "Europe": {
+    "moldova":  {
+      "capital" : "Europe2",
+      "photo" : "moldova.png"
+    }
+  },
+  "North_America": {
+    "canada":  {
+      "capital" : "North_America5",
+      "photo" : "canada.png"
+    },
+    "honduras":  {
+      "capital" : "North_America2",
+      "photo" : "honduras.png"
+    }
+  },
+  "South_America": {
+
+    "brazil":  {
+      "capital" : "South_America1",
+      "photo" : "brazil.png"
+    },
+    "chile":  {
+      "capital" : "South_America2",
+      "photo" : "chile.png"
+    },
+    "peru":  {
+      "capital" : "South_America3",
+      "photo" : "peru.png"
+    }
+  }
+}

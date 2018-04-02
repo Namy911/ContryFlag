@@ -29,7 +29,7 @@ import flag.test.com.contryflag.model.Country;
 
 public class MainActivityFragment extends Fragment implements View.OnClickListener {
 
-    private static final String JSON_ANSWER = "answer.json";
+    private static final String JSON_ANSWER = "answer2.json";
     private static final String REGION_CAPITAL = "capital";
     private static final String REGION_PHOTO = "photo";
     private static final String BUNDLE_LIST_ANSWERS = "model.bundle.ListAnswer";
@@ -183,10 +183,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private Country selectAnswer(){
-        return listAnswer.get(new Random().nextInt(listAnswer.size()));
-    }
-
     private List<Country> setRandAnswers() {
         List<Country> tempAnswers = new ArrayList<>();
         if (tempList.size() > 1 ){
@@ -222,53 +218,55 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             list.remove(list.get(index.get(i)));
         }
 
-
-//        for (int i = 0; i < 3; i++) {
-//            list.add(answers.get(i));
-//        }
-        int id = new Random().nextInt(answers.size());
-
-        for (int i = 0; i < 4; i++) {
-            if (id == i){
-                Log.d(TAG, "setRandAnswers: =================" + answers.get(id).getCountry()  + "  --  " + i);
-                continue;
-            }else {
-                list.add(answers.get(i));
-                Log.d(TAG, "setRandAnswers else :  " + answers.get(i).getCountry() + "  --  " + i);
-            }
-        }
-
         switch (length) {
             case 4:
-                answer = answers.get(id);
-                removeCountry(answer);
-                //Log.d(TAG, "setRandAnswers: " + answer.getCountry());
+                setRandAnswer(answers, list);
                 break;
             case 3:
-                answers = setAnswerHelper(answers, 2);
+                setAnswerHelper(answers, list, 2);
                 break;
             case 2:
-                answers = setAnswerHelper(answers, 1);
+                setAnswerHelper(answers, list,1);
                 break;
             case 1:
-                answers = setAnswerHelper(answers, 0);
+                setAnswerHelper(answers, list, 0);
                 break;
         }
         return answers;
     }
 
-    private List<Country> setAnswerHelper(List<Country> answers, int index){
-        answers.add(tempList.get(index));
+    private void setRandAnswer(List<Country> answers, List<Country> list){
+        int id = new Random().nextInt(answers.size());
+        for (int i = 0; i < 4; i++) {
+            if (id == i){
+                continue;
+            }else {
+                list.add(answers.get(i));
+            }
+        }
+        answer = answers.get(id);
+        Log.d(TAG, "setRandAnswer: > 4 " + answers.get(id).getCountry());
+        removeCountry(answer);
+    }
+
+    private void setAnswerHelper(List<Country> answers,List<Country> list, int index){
+        int id = new Random().nextInt(answers.size());
+        for (int i = 0; i < 4; i++) {
+            list.add(answers.get(i));
+        }
+        answers.remove(id);
+        answers.add( id, tempList.get(index));
+
         removeCountry(tempList.get(index));
-        Log.d(TAG, "setAnswerHelper -- Delete: " + tempList.size() + " / " + tempLite.size() + " ---------------- " + tempList.get(index).getCountry());
-        return  answers;
+        answer = tempList.get(index);
+        Log.d(TAG, "setAnswerHelper: answer   " + answer.getCountry() + answers.size());
     }
 
     private void removeCountry(Country country) {
         if (countryList.size() > 1) {
             countryList.remove(country);
             tempLite.add(country);
-            Log.d(TAG, "setAnswerHelper Delete  : " + tempLite.size() + " / " + countryList.size() );
+            //Log.d(TAG, "setAnswerHelper Delete  : " + countryList.size() );
         } else {
             Log.d(TAG, "removeCountry: no deleted");
         }
@@ -292,6 +290,9 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             }else {
                 Log.d(TAG, "onClick: " + "Incorect!!!!!!!!!!!");
             }
+
+
+            //init(false);
         }
     }
 }
