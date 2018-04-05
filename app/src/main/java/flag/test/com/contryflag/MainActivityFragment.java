@@ -21,6 +21,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +35,8 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     private static final String REGION_PHOTO = "photo";
     private static final String BUNDLE_LIST_ANSWERS = "model.bundle.ListAnswer";
     private static final String BUNDLE_ANSWERS = "fragment.main.answer";
+    private static final String BUNDLE_TEMP_LIST = "fragment.main.list";
+    private static final String BUNDLE__LITE_LIST = "fragment.main.list.lite";
 
     private ImageView countryFlagImg;
     private InputStream stream;
@@ -42,6 +45,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     private Bitmap bitmapFlag;
 
     private List<Country> countryList;
+    private List<Country> tempCountryList;
     private List<Country> tempLite = new ArrayList<>();
     private List<Country> tempList = new ArrayList<>();
     private List<Country> listAnswer = new ArrayList<>();
@@ -51,12 +55,26 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
     private Country bundleAnswer;
     private List<Country> bundleListAnswer = new ArrayList<>();
 
+    private boolean test;
     private static final String TAG = "MainActivityFragment";
+    private static final String TAG2 = "MainActivityFragment2";
+    private List<Country> bundleTempList;
+    private List<Country> bundleLiteList;
 
+    public static MainActivityFragment newInstance() {
+        
+        Bundle args = new Bundle();
+        
+        MainActivityFragment fragment = new MainActivityFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getAnswersJSON();
+        if (Country.getInstance().getArray().size() > 1){
+            Country.getInstance().getArray().clear();
+        }
     }
 
     @Override
@@ -80,7 +98,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         buttonList.add(button3);
         buttonList.add(button4);
 
-        init(false);
+
 
         return view;
     }
@@ -98,66 +116,77 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         if (savedInstanceState != null){
             bundleListAnswer = savedInstanceState.getParcelableArrayList(BUNDLE_LIST_ANSWERS);
             bundleAnswer = savedInstanceState.getParcelable(BUNDLE_ANSWERS);
-            init(true);
         }
     }
 
-    private String loadJSONFromAsset() {
-        String json = null;
-        AssetManager manager = getActivity().getAssets();
+//    private String loadJSONFromAsset() {
+//        String json = null;
+//        AssetManager manager = getActivity().getAssets();
+//
+//        try {
+//            stream = manager.open(JSON_ANSWER);
+//            byte[] answerArray = new byte[stream.available()];
+//            stream.read(answerArray);
+//
+//            json = new String(answerArray, "UTF-8");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } finally {
+//            if (stream != null)
+//                try {
+//                    stream.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            return json;
+//        }
+//    }
 
-        try {
-            stream = manager.open(JSON_ANSWER);
-            byte[] answerArray = new byte[stream.available()];
-            stream.read(answerArray);
+//    private void getAnswersJSON() {
+//        countryList = new ArrayList<>();
+//        try {
+//            JSONObject objectAnswer = new JSONObject(loadJSONFromAsset());
+//            Iterator<String> firstNode = objectAnswer.keys();
+//
+//            while (firstNode.hasNext()) {
+//                String firstNodeKeys = firstNode.next();
+//                JSONObject firstNodeValue = objectAnswer.getJSONObject(firstNodeKeys);
+//                Iterator<String> SecondNode = firstNodeValue.keys();
+//
+//                while (SecondNode.hasNext()) {
+//                    String SecondNodeKeys = SecondNode.next();
+//                    JSONObject SecondNodeValue = firstNodeValue.getJSONObject(SecondNodeKeys);
+//                    String capital = (String) SecondNodeValue.get(REGION_CAPITAL);
+//                    String photo = (String) SecondNodeValue.get(REGION_PHOTO);
+//
+//                    countryList.add(new Country(firstNodeKeys, SecondNodeKeys, capital, photo));
+////                    Country country = Country.getInstance();
+////                    country.setRegion(firstNodeKeys);
+////                    country.setCountry(SecondNodeKeys);
+////                    country.setCapital(capital);
+////                    country.setPhoto(photo);
+////                    countryList.add(country);
+//                      Country.getInstance().addToArray(firstNodeKeys, SecondNodeKeys, capital, photo);
+//                }
+//            }
+//
+//            if (!test){
+//                //test = false;
+//                Country.getInstance().setRandList();
+//                Log.d(TAG, "getAnswersJSON: ++++++++++++++         getAnswersJSON        +++++++++++++++++++" );
+//            }
+//
+//            //Log.d(TAG2, "getAnswersJSON: size  " + Country.getInstance().getArray().size() + " " + countryList.size());
+//            //Log.d(TAG2, "getAnswersJSON: " +Country.getInstance().getArray().get(0).getCountry() + "/" + Country.getInstance().getArray().get(1).getCountry()
+//                  //  +Country.getInstance().getArray().get(2).getCountry() + "/" + Country.getInstance().getArray().get(3).getCountry());
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-            json = new String(answerArray, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (stream != null)
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            return json;
-        }
-    }
-
-    private void getAnswersJSON() {
-        countryList = new ArrayList<>();
-        try {
-            JSONObject objectAnswer = new JSONObject(loadJSONFromAsset());
-            Iterator<String> firstNode = objectAnswer.keys();
-
-            while (firstNode.hasNext()) {
-                String firstNodeKeys = firstNode.next();
-                JSONObject firstNodeValue = objectAnswer.getJSONObject(firstNodeKeys);
-                Iterator<String> SecondNode = firstNodeValue.keys();
-
-                while (SecondNode.hasNext()) {
-                    String SecondNodeKeys = SecondNode.next();
-                    JSONObject SecondNodeValue = firstNodeValue.getJSONObject(SecondNodeKeys);
-                    String capital = (String) SecondNodeValue.get(REGION_CAPITAL);
-                    String photo = (String) SecondNodeValue.get(REGION_PHOTO);
-
-                    countryList.add(new Country(firstNodeKeys, SecondNodeKeys, capital, photo));
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getRandAnswers(boolean save) {
-        if (save){
-            listAnswer = bundleListAnswer;
-            answer = bundleAnswer;
-        }else {
-            listAnswer = setRandAnswers();
-            //answer = selectAnswer();
-        }
+    private void getRandAnswers(boolean flagSave) {
+        //listAnswer = setRandAnswers(flagSave);
+        listAnswer = setRandAnswers(flagSave);
         //Log.d(TAG, "getRandAnswers:  " + answer.getCountry());
         if (listAnswer.size() > 1) {
             for (int i = 0; i < buttonList.size(); i++) {
@@ -183,28 +212,54 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         }
     }
 
-    private List<Country> setRandAnswers() {
+    private List<Country> setRandAnswers(boolean flag) {
         List<Country> tempAnswers = new ArrayList<>();
-        if (tempList.size() > 1 ){
-            tempList.clear();
-        }
-        tempList.addAll(countryList);
 
-        if (tempList.size() > 4) {
-            tempAnswers = setRandAnswers(tempList, 4);
-        } else if (tempList.size() > 3) {
-            tempAnswers = setRandAnswers(tempLite, 3);
-        } else if (tempList.size() > 2) {
-            tempAnswers = setRandAnswers(tempLite, 2);
-        } else if (tempList.size() > 1) {
-            tempAnswers = setRandAnswers(tempLite, 1);
-        } else {
-            buttonList.get(0).setEnabled(false);
-            buttonList.get(1).setEnabled(false);
-            buttonList.get(2).setEnabled(false);
-            buttonList.get(3).setEnabled(false);
-            Log.d(TAG, "--------------------------- Finis -----------------------------------------");
+        if (!flag) {
+            if (tempList.size() > 1) {
+                tempList.clear();
+            }
+            Log.d(TAG, "+++++++++++++++++++++++++++++++++++++++: ");
+            ////////////////////////////////////
+            tempList.addAll(countryList);
+            if (tempList.size() > 4) {
+                tempAnswers = setRandAnswers(tempList, 4);
+                Log.d(TAG, ">4 answer   " + answer.getCountry());
+            } else if (tempList.size() > 3) {
+                tempAnswers = setRandAnswers(tempLite, 3);
+                Log.d(TAG, "setRandAnswers: !3flag   " + answer.getCountry());
+            } else if (tempList.size() > 2) {
+                tempAnswers = setRandAnswers(tempLite, 2);
+                Log.d(TAG, "setRandAnswers: !flag   " + answer.getCountry());
+            } else if (tempList.size() > 1) {
+                tempAnswers = setRandAnswers(tempLite, 1);
+                Log.d(TAG, "setRandAnswers: !flag   " + answer.getCountry());
+            } else {
+                buttonList.get(0).setEnabled(false);
+                buttonList.get(1).setEnabled(false);
+                buttonList.get(2).setEnabled(false);
+                buttonList.get(3).setEnabled(false);
+                Log.d(TAG, "--------------------------- Finis -----------------------------------------");
+            }
+        }else {
+            Log.d(TAG, "------------------------------------------: ");
+            tempAnswers = restoreData();
         }
+        return tempAnswers;
+    }
+
+    private List<Country> restoreData(){
+        List<Country> tempAnswers = new ArrayList<>();
+        if (tempList.size() > 1) {
+            tempList.clear();
+            tempLite.clear();
+        }
+        tempList.addAll(bundleTempList);
+        tempLite.addAll(bundleLiteList);
+        //Log.d(TAG, "Bundle size  bundleTempList  : " + tempList.size()  + "/"+ tempLite.size());
+        tempAnswers = bundleListAnswer;
+        answer = bundleAnswer;
+        Log.d(TAG, "Bundle " + bundleAnswer.getCountry() + "  ------------  " + answer.getCountry());
         return tempAnswers;
     }
 
@@ -212,7 +267,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         List<Integer> index = new ArrayList<>();
         List<Country> answers = new ArrayList<>();
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < length; i++) {
             index.add(new Random().nextInt(list.size()));
             answers.add(list.get(index.get(i)));
             list.remove(list.get(index.get(i)));
@@ -244,9 +299,7 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
                 list.add(answers.get(i));
             }
         }
-        answer = answers.get(id);
-        Log.d(TAG, "setRandAnswer: > 4 " + answers.get(id).getCountry());
-        removeCountry(answer);
+        removeCountry(answers.get(id));
     }
 
     private void setAnswerHelper(List<Country> answers,List<Country> list, int index){
@@ -258,15 +311,15 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
         answers.add( id, tempList.get(index));
 
         removeCountry(tempList.get(index));
-        answer = tempList.get(index);
-        Log.d(TAG, "setAnswerHelper: answer   " + answer.getCountry() + answers.size());
+        Log.d(TAG, "setAnswerHelper: " + tempList.get(index).getCountry());
     }
 
     private void removeCountry(Country country) {
         if (countryList.size() > 1) {
             countryList.remove(country);
             tempLite.add(country);
-            //Log.d(TAG, "setAnswerHelper Delete  : " + countryList.size() );
+            answer = country;
+            Log.d(TAG, "removeCountry: " + tempList.size() + " -----  " + tempLite.size());
         } else {
             Log.d(TAG, "removeCountry: no deleted");
         }
@@ -290,9 +343,6 @@ public class MainActivityFragment extends Fragment implements View.OnClickListen
             }else {
                 Log.d(TAG, "onClick: " + "Incorect!!!!!!!!!!!");
             }
-
-
-            //init(false);
         }
     }
 }

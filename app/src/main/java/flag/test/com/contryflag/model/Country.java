@@ -2,16 +2,28 @@ package flag.test.com.contryflag.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class Country implements Parcelable {
-    private static final Country ourInstance = new Country();
+    static final String TAG = "Country";
+    
+    private static final Country countryInstance = new Country();
+    private ArrayList<Country> list = null;
 
     private String country;
     private String capital;
     private String region;
     private String photo;
 
-    public Country() {}
+    private Country() {
+        list = new ArrayList<Country>();
+    }
 
     public Country(String region, String country, String capital, String photo) {
         this.country = country;
@@ -21,7 +33,11 @@ public class Country implements Parcelable {
     }
 
     public static Country getInstance() {
-        return ourInstance;
+        return countryInstance;
+    }
+
+    public ArrayList<Country> getArray() {
+        return this.list;
     }
 
     public String getCountry() {
@@ -54,6 +70,28 @@ public class Country implements Parcelable {
 
     public void setPhoto(String photo) {
         this.photo = photo;
+    }
+
+    public List<Country> addToArray(String region, String country, String capital, String photo) {
+        Country newCountry = new Country();
+        newCountry.setRegion(region);
+        newCountry.setCountry(country);
+        newCountry.setCapital(capital);
+        newCountry.setPhoto(photo);
+
+        list.add(newCountry);
+        Log.d(TAG, "addToArray: ");
+        return list;
+    }
+
+    public void setRandList(){
+        List<Integer> index = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            index.add(new Random().nextInt(list.size()));
+            Collections.swap(list, index.get(i), i);
+        }
+        int i = 0;
+        Log.d(TAG, "setRandList: " +i);
     }
 
     @Override
